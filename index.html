@@ -18,72 +18,77 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        .car-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .car-card:hover {
-            transform: translateY(-10px);
+            transform: scale(1.02);
             border-color: #38bdf8;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
         }
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <header class="text-center mb-16">
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-indigo-500">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter mb-2 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-indigo-500">
                 AUTOVISION ELITE
             </h1>
-            <p class="text-slate-400 text-lg font-light">La ingeniería financiera detrás de tu próximo motor.</p>
+            <p class="text-slate-400 font-light">Catálogo inteligente y análisis de costes en tiempo real.</p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             
-            <div class="lg:col-span-2 space-y-6">
-                <div class="glass p-6 rounded-3xl">
-                    <input type="text" id="search" onkeyup="filterCars()" placeholder="Buscar modelo (Ej: Mustang, BMW, Swift...)" 
-                           class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all text-white">
+            <div class="lg:col-span-3 space-y-6">
+                <div class="glass p-4 rounded-2xl flex items-center gap-4">
+                    <div class="text-sky-400 ml-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" id="search" onkeyup="filterCars()" placeholder="Escribe marca o modelo (Ej: BMW, Toyota, Hilux...)" 
+                           class="w-full bg-transparent border-none py-2 text-xl focus:outline-none text-white placeholder:text-slate-600">
                 </div>
 
-                <div id="catalog" class="grid grid-cols-1 md:grid-cols-2 gap-6 custom-scroll overflow-y-auto max-h-[600px] pr-2">
+                <div id="catalog" class="grid grid-cols-1 md:grid-cols-3 gap-4 custom-scroll overflow-y-auto max-h-[70h] pr-2">
                     </div>
             </div>
 
             <div class="lg:col-span-1">
-                <div class="glass p-8 rounded-3xl sticky top-10">
-                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-                        <span class="w-2 h-8 bg-sky-500 rounded-full"></span>
-                        Análisis de Coste
+                <div class="glass p-6 rounded-3xl sticky top-8">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2 text-sky-400">
+                        Calculadora PRO
                     </h2>
                     
-                    <div class="space-y-5">
-                        <div>
-                            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Modelo Seleccionado</label>
-                            <input type="text" id="calc-modelo" readonly class="w-full bg-transparent border-b border-slate-700 py-2 text-xl font-bold outline-none">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-xs font-semibold text-slate-500 uppercase">Patente (UYU)</label>
-                                <input type="number" id="calc-patente" class="w-full bg-slate-800/50 p-3 rounded-xl border border-slate-700 mt-1">
-                            </div>
-                            <div>
-                                <label class="text-xs font-semibold text-slate-500 uppercase">Seguro (UYU)</label>
-                                <input type="number" id="calc-seguro" class="w-full bg-slate-800/50 p-3 rounded-xl border border-slate-700 mt-1">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-slate-500 uppercase">Km Mensuales</label>
-                            <input type="number" id="calc-km" value="1000" class="w-full bg-slate-800/50 p-3 rounded-xl border border-slate-700 mt-1">
+                    <div class="space-y-4">
+                        <div id="selected-preview" class="hidden mb-4">
+                            <img id="prev-img" src="" class="w-full h-24 object-cover rounded-xl border border-slate-700">
                         </div>
                         
-                        <button onclick="calculateTotal()" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold py-4 rounded-2xl transition-all shadow-lg shadow-sky-500/20 active:scale-95">
-                            GENERAR REPORTE
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-500 uppercase">Vehículo</label>
+                            <input type="text" id="calc-modelo" readonly class="w-full bg-transparent border-b border-slate-700 py-1 text-lg font-bold outline-none text-sky-100">
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-500 uppercase">Patente Anual (UYU)</label>
+                                <input type="number" id="calc-patente" class="w-full bg-slate-800/40 p-3 rounded-xl border border-slate-700 mt-1 focus:border-sky-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-500 uppercase">Seguro Total (UYU)</label>
+                                <input type="number" id="calc-seguro" class="w-full bg-slate-800/40 p-3 rounded-xl border border-slate-700 mt-1 focus:border-sky-500 outline-none">
+                            </div>
+                        </div>
+
+                        <button onclick="calculateTotal()" class="w-full bg-gradient-to-r from-sky-600 to-sky-400 hover:from-sky-500 hover:to-sky-300 text-slate-950 font-black py-4 rounded-xl transition-all shadow-lg shadow-sky-900/20">
+                            CALCULAR GASTO
                         </button>
 
-                        <div id="report" class="mt-8 p-6 bg-slate-900/80 rounded-2xl hidden border-l-4 border-green-500">
-                            <p class="text-slate-400 text-sm">Gasto Mensual Total</p>
-                            <div class="text-4xl font-black text-green-400" id="total-result">$ 0</div>
-                            <p class="text-xs text-slate-500 mt-4 leading-relaxed">Incluye combustible (Nafta $78/L), seguro y tributos municipales prorrateados.</p>
+                        <div id="report" class="mt-6 p-5 bg-sky-500/10 rounded-2xl hidden border border-sky-500/30">
+                            <p class="text-sky-400 text-[10px] font-bold uppercase">Gasto Mensual Estimado</p>
+                            <div class="text-3xl font-black text-white" id="total-result">$ 0</div>
                         </div>
                     </div>
                 </div>
@@ -92,25 +97,40 @@
     </div>
 
     <script>
+        // Base de datos extendida con modelos populares en Uruguay y el mundo
         const cars = [
-            { brand: "Ford", model: "Mustang GT", img: "https://images.unsplash.com/photo-1584345604480-8347bb9c503c?auto=format&fit=crop&q=80&w=400", consumption: 6, tax: 65000, insurance: 70000 },
-            { brand: "BMW", model: "M3 Competition", img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80&w=400", consumption: 8, tax: 85000, insurance: 95000 },
-            { brand: "Volkswagen", model: "Vento TSI", img: "https://images.unsplash.com/photo-1622353320295-88849666014b?auto=format&fit=crop&q=80&w=400", consumption: 11, tax: 32000, insurance: 38000 },
-            { brand: "Suzuki", model: "Swift Hybrid", img: "https://images.unsplash.com/photo-1632243193741-b30893698d91?auto=format&fit=crop&q=80&w=400", consumption: 18, tax: 19000, insurance: 22000 },
-            { brand: "Porsche", model: "911 Carrera", img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=400", consumption: 7, tax: 120000, insurance: 150000 },
-            { brand: "Toyota", model: "Hilux SRX", img: "https://images.unsplash.com/photo-1591439657078-e045a94474b2?auto=format&fit=crop&q=80&w=400", consumption: 10, tax: 45000, insurance: 50000 }
+            { brand: "BMW", model: "M3 Competition", tax: 85000, insurance: 95000, cons: 8 },
+            { brand: "BMW", model: "320i", tax: 55000, insurance: 60000, cons: 12 },
+            { brand: "Ford", model: "Mustang GT", tax: 70000, insurance: 75000, cons: 6 },
+            { brand: "Ford", model: "Ranger Raptor", tax: 45000, insurance: 55000, cons: 9 },
+            { brand: "Volkswagen", model: "Vento TSI", tax: 32000, insurance: 38000, cons: 11 },
+            { brand: "Volkswagen", model: "Gol Trend", tax: 15000, insurance: 18000, cons: 14 },
+            { brand: "Toyota", model: "Hilux SRX", tax: 48000, insurance: 52000, cons: 10 },
+            { brand: "Toyota", model: "Corolla Hybrid", tax: 28000, insurance: 30000, cons: 22 },
+            { brand: "Suzuki", model: "Swift Hybrid", tax: 19000, insurance: 22000, cons: 18 },
+            { brand: "Suzuki", model: "Jimny", tax: 22000, insurance: 25000, cons: 13 },
+            { brand: "Chevrolet", model: "Onix Turbo", tax: 18000, insurance: 21000, cons: 15 },
+            { brand: "Audi", model: "A4 Quattro", tax: 65000, insurance: 70000, cons: 10 },
+            { brand: "Hyundai", model: "HB20", tax: 16000, insurance: 19000, cons: 14 },
+            { brand: "Porsche", model: "911 Carrera", tax: 140000, insurance: 160000, cons: 7 },
+            { brand: "Mercedes-Benz", model: "C200", tax: 75000, insurance: 80000, cons: 11 },
+            { brand: "Tesla", model: "Model 3", tax: 30000, insurance: 45000, cons: 50 } // Consumo simbólico para EV
         ];
+
+        function getCarImage(brand, model) {
+            // Usa Source Unsplash para buscar una imagen real basada en la marca y modelo
+            return `https://source.unsplash.com/400x300/?${brand},${model},car`;
+        }
 
         function loadCatalog(data) {
             const container = document.getElementById('catalog');
             container.innerHTML = data.map(car => `
-                <div class="car-card glass rounded-3xl p-4 transition-all duration-300 cursor-pointer" onclick="selectCar('${car.model}', ${car.tax}, ${car.insurance}, ${car.consumption})">
-                    <img src="${car.img}" class="w-full h-48 object-cover rounded-2xl mb-4" alt="${car.model}">
-                    <h3 class="text-sm text-sky-400 font-bold uppercase tracking-widest">${car.brand}</h3>
-                    <p class="text-xl font-bold text-white">${car.model}</p>
-                    <div class="flex justify-between mt-4 text-xs text-slate-400">
-                        <span>Consumo: ${car.consumption} km/L</span>
-                        <span>UY Market</span>
+                <div class="car-card glass rounded-2xl p-3 cursor-pointer border border-transparent" 
+                     onclick="selectCar('${car.brand}', '${car.model}', ${car.tax}, ${car.insurance}, ${car.cons})">
+                    <img src="${getCarImage(car.brand, car.model)}" class="w-full h-32 object-cover rounded-xl mb-3 bg-slate-800" alt="${car.model}">
+                    <div class="px-1">
+                        <p class="text-[10px] text-sky-400 font-bold uppercase tracking-tighter">${car.brand}</p>
+                        <p class="text-sm font-bold text-white leading-tight">${car.model}</p>
                     </div>
                 </div>
             `).join('');
@@ -118,33 +138,43 @@
 
         function filterCars() {
             const query = document.getElementById('search').value.toLowerCase();
-            const filtered = cars.filter(c => c.model.toLowerCase().includes(query) || c.brand.toLowerCase().includes(query));
+            const filtered = cars.filter(c => 
+                c.model.toLowerCase().includes(query) || 
+                c.brand.toLowerCase().includes(query)
+            );
             loadCatalog(filtered);
         }
 
-        let selectedConsumption = 0;
+        let selectedCons = 0;
 
-        function selectCar(model, tax, insurance, cons) {
-            document.getElementById('calc-modelo').value = model;
+        function selectCar(brand, model, tax, ins, cons) {
+            document.getElementById('calc-modelo').value = `${brand} ${model}`;
             document.getElementById('calc-patente').value = tax;
-            document.getElementById('calc-seguro').value = insurance;
-            selectedConsumption = cons;
+            document.getElementById('calc-seguro').value = ins;
+            selectedCons = cons;
+            
+            // Preview de imagen en la calculadora
+            const prev = document.getElementById('selected-preview');
+            const prevImg = document.getElementById('prev-img');
+            prevImg.src = getCarImage(brand, model);
+            prev.classList.remove('hidden');
+            
             document.getElementById('report').classList.add('hidden');
         }
 
         function calculateTotal() {
             const tax = parseFloat(document.getElementById('calc-patente').value) || 0;
             const ins = parseFloat(document.getElementById('calc-seguro').value) || 0;
-            const km = parseFloat(document.getElementById('calc-km').value) || 0;
+            const km = parseFloat(document.getElementById('calc-km')?.value || 1000);
             
-            const fuelCost = (km / (selectedConsumption || 10)) * 78;
-            const monthlyFixed = (tax + ins) / 12;
-            const total = fuelCost + monthlyFixed;
+            const fuel = (km / (selectedCons || 12)) * 78;
+            const total = (tax + ins) / 12 + fuel;
 
             document.getElementById('total-result').innerText = `$ ${total.toLocaleString('es-UY', {maximumFractionDigits: 0})}`;
             document.getElementById('report').classList.remove('hidden');
         }
 
+        // Carga inicial
         loadCatalog(cars);
     </script>
 </body>
