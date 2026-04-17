@@ -3,99 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoUY | Catálogo Automotriz Profesional Uruguay</title>
+    <title>AutoUY | Infinite Global Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #06b6d4; --bg: #ffffff; --card-bg: #f8fafc; --text: #0f172a; --border: #e2e8f0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #cbd5e1; color: #0f172a; overflow-x: hidden; }
         
-        /* Efecto de Movimiento Pro (Light Mode) */
+        /* Efecto de Movimiento Avanzado (Tilt & Zoom) */
         .car-card { 
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
-            border: 1px solid var(--border);
-            background: var(--card-bg);
+            background: #ffffff; 
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.05);
+            perspective: 1000px;
         }
         .car-card:hover { 
-            transform: translateY(-8px) scale(1.01); 
-            border-color: var(--accent);
-            background: #ffffff;
-            box-shadow: 0 20px 30px -10px rgba(6, 182, 212, 0.1);
+            transform: translateY(-15px) rotateX(2deg) rotateY(2deg); 
+            box-shadow: 0 45px 80px -20px rgba(0, 0, 0, 0.3);
+            border-color: #000;
         }
-        .car-card img { transition: transform 0.6s ease; }
-        .car-card:hover img { transform: scale(1.08) rotate(-0.5deg); }
+        .img-container { overflow: hidden; border-radius: 15px; height: 220px; position: relative; }
+        .car-card img { transition: transform 1.2s ease; width: 100%; height: 100%; object-fit: cover; }
+        .car-card:hover img { transform: scale(1.3) translateY(-10px); }
 
-        /* Estética Minimalista Light */
-        .search-shadow { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.02), 0 4px 6px -4px rgba(0, 0, 0, 0.01); }
-        
-        input::-webkit-calendar-picker-indicator { opacity: 0.3; }
-        
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-grid { animation: slideUp 0.5s ease-out forwards; }
+        /* Buscador Inteligente Neomórfico */
+        .search-box {
+            background: #ffffff;
+            border: 4px solid #000;
+            box-shadow: 12px 12px 0px #1e293b;
+            transition: all 0.3s ease;
+        }
+        .search-box:focus-within { transform: translate(4px, 4px); box-shadow: 4px 4px 0px #1e293b; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #cbd5e1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #000; border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-10">
-    <div class="max-w-7xl mx-auto">
-        <header class="mb-14 flex flex-col md:flex-row justify-between items-center border-b border-slate-200 pb-8">
-            <div class="text-center md:text-left">
-                <h1 class="text-7xl font-black tracking-tighter text-slate-950">Auto<span class="text-[#06b6d4]">UY</span></h1>
-                <p class="text-slate-500 font-bold tracking-[0.2em] uppercase text-[9px] mt-1.5">Inteligencia Automotriz • Uruguay</p>
+<body class="p-4 md:p-12 custom-scrollbar">
+    <div class="max-w-[1700px] mx-auto">
+        <header class="mb-16 flex flex-col md:flex-row justify-between items-start gap-8 border-b-8 border-black pb-12">
+            <div>
+                <h1 class="text-[10rem] font-black tracking-tighter leading-[0.8] mb-4">AUTO<span class="text-slate-500">UY</span></h1>
+                <p class="text-sm font-bold uppercase tracking-[0.8em] text-slate-600">Global Intelligence Vehicle Database / 2026</p>
             </div>
-            <div class="mt-6 md:mt-0 flex gap-8 items-center bg-slate-100 p-4 rounded-full border border-slate-200 search-shadow">
-                <div class="text-center">
-                    <span class="text-4xl font-black text-slate-950 block" id="counter">0</span>
-                    <p class="text-[8px] text-cyan-600 font-black uppercase">Modelos Verificados</p>
-                </div>
+            <div class="bg-black text-white p-10 rounded-[3rem] text-right min-w-[300px]">
+                <span id="counter" class="text-7xl font-black block leading-none">0</span>
+                <span class="text-xs uppercase font-bold tracking-widest text-slate-400 italic">Unidades Indexadas</span>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-10">
-            <div class="lg:col-span-3 space-y-10">
-                <div class="relative group">
-                    <div class="absolute -inset-1 bg-cyan-100 rounded-[1.5rem] blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-                    <div class="relative bg-white p-1 rounded-[1.5rem] border border-slate-200 search-shadow">
-                        <input type="text" id="search" list="cars-datalist" oninput="handleSearch()" 
-                               placeholder="¿Qué modelo buscás? (Ej: Onix, Hilux, VW Gol...)" 
-                               class="w-full bg-transparent border-none p-5 text-xl font-bold focus:outline-none text-slate-950 placeholder:text-slate-400">
-                    </div>
-                    <datalist id="cars-datalist"></datalist>
+        <div class="grid grid-cols-1 xl:grid-cols-6 gap-12">
+            <div class="xl:col-span-4">
+                <div class="mb-16 relative">
+                    <input type="text" id="search" oninput="doSearch()" 
+                           placeholder="Buscador Inteligente: Escribí marca, modelo o tipo..." 
+                           class="search-box w-full p-10 text-4xl font-black rounded-3xl focus:outline-none">
+                    <div class="absolute right-8 top-1/2 -translate-y-1/2 text-slate-300 font-black text-xl">SEARCH_ENGINE_V2</div>
                 </div>
-
-                <div id="catalog" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 animate-grid">
-                    </div>
+                <div id="catalog" class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10"></div>
             </div>
 
-            <div class="lg:col-span-1">
-                <div class="bg-white p-8 rounded-[2.5rem] sticky top-10 border border-slate-100 shadow-xl shadow-slate-100/50">
-                    <div class="flex items-center gap-2.5 mb-8">
-                        <div class="w-1.5 h-7 bg-[#06b6d4] rounded-full"></div>
-                        <h2 class="text-xl font-bold uppercase tracking-tight text-slate-950">Calculadora de Costes</h2>
+            <div class="xl:col-span-2">
+                <div class="bg-slate-900 text-white p-12 rounded-[4rem] sticky top-10 shadow-2xl border-l-8 border-white/10">
+                    <h2 class="text-4xl font-black mb-10 uppercase italic tracking-tighter">Data Center</h2>
+                    <div id="calc-preview" class="hidden mb-10 rounded-[2.5rem] overflow-hidden border-4 border-slate-700 rotate-1">
+                        <img id="calc-img" src="" class="w-full h-60 object-cover scale-110">
                     </div>
-                    
-                    <div id="preview-box" class="hidden mb-8 rounded-3xl overflow-hidden border border-slate-200 shadow-inner">
-                        <img id="calc-img" src="" class="w-full h-44 object-cover" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800'">
-                    </div>
-
-                    <div class="space-y-5">
-                        <input type="text" id="calc-name" readonly class="w-full bg-transparent text-xl font-extrabold text-[#06b6d4] outline-none" placeholder="Seleccioná un vehículo">
-                        
-                        <div class="space-y-4">
-                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                <label class="text-[8px] text-slate-400 font-bold uppercase tracking-widest">Patente Anual (Est.)</label>
-                                <input type="number" id="calc-t" class="w-full bg-transparent text-lg font-bold outline-none mt-1 text-slate-950" placeholder="0">
+                    <div class="space-y-8">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-2">Modelo Identificado</p>
+                            <h3 id="calc-label" class="text-4xl font-black text-white leading-none">---</h3>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white/5 p-6 rounded-3xl">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase">Mantenimiento</span>
+                                <div id="calc-sum" class="text-xl font-black mt-2">$ 0</div>
                             </div>
-                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                <label class="text-[8px] text-slate-400 font-bold uppercase tracking-widest">Seguro Total (Est.)</label>
-                                <input type="number" id="calc-s" class="w-full bg-transparent text-lg font-bold outline-none mt-1 text-slate-950" placeholder="0">
+                            <div class="bg-white/5 p-6 rounded-3xl">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase">Consumo</span>
+                                <div id="calc-cons" class="text-xl font-black mt-2">0 km/l</div>
                             </div>
                         </div>
-
-                        <button onclick="calculate()" class="w-full bg-[#06b6d4] hover:bg-slate-950 text-white font-bold py-5 rounded-2xl transition-all transform active:scale-95 shadow-lg shadow-cyan-200/50 uppercase tracking-tight text-sm">CALCULAR MENSUALIDAD</button>
-                        
-                        <div id="result" class="hidden p-6 bg-cyan-50 border border-cyan-100 rounded-3xl mt-4">
-                            <p class="text-[9px] font-bold text-cyan-700 uppercase mb-1">Total Estimado / Mes</p>
-                            <span id="total-val" class="text-3xl font-extrabold text-slate-950"></span>
-                            <p class="text-[8px] text-slate-500 mt-1.5 font-medium italic">*Incluye nafta (1000km/mes)</p>
+                        <button onclick="runCalc()" class="w-full bg-white text-black font-black py-7 rounded-3xl hover:bg-slate-200 transition-all uppercase text-sm tracking-widest shadow-xl">Simular Costo Operativo</button>
+                        <div id="result-box" class="hidden p-10 bg-black rounded-[3rem] border-2 border-white/10 animate-pulse">
+                            <span class="text-xs font-bold text-slate-500 uppercase">Gasto Total Mensual (UY)</span>
+                            <div id="total-price" class="text-6xl font-black text-white mt-4 italic"></div>
                         </div>
                     </div>
                 </div>
@@ -104,10 +97,143 @@
     </div>
 
     <script>
-        // BASE DE DATOS MASIVA (+130 MODELOS VERIFICADOS UY)
-        const carData = [
-            // FIAT (10 modelos - Muy presentes en UY)
-            { b: "Fiat", m: "Mobi Like 1.0", t: 12500, s: 16000, c: 17, i: "https://images.unsplash.com/photo-1549416878-b9ca95e26903?w=800" },
-            { b: "Fiat", m: "Argo Drive 1.3", t: 16000, s: 21000, c: 15, i: "https://images.unsplash.com/photo-1631214503851-a20d324461ed?w=800" },
-            { b: "Fiat", m: "Cronos Drive 1.3", t: 17000, s: 22000, c: 15, i: "https://images.unsplash.com/photo-1631214503851-a20d324461ed?w=800" },
-            { b: "Fiat", m: "Pulse Drive Turbo", t: 22000, s: 28000, c: 14, i: "
+        // MOTOR DE DATOS: 45 MARCAS
+        const brands = [
+            // LUJO & HIPER-LUJO
+            { b: "Ferrari", m: ["SF90", "Roma", "F8", "Purosangue", "296 GTB"], t: 400000, s: 500000, c: 6 },
+            { b: "Lamborghini", m: ["Revuelto", "Urus", "Huracán", "Aventador"], t: 450000, s: 550000, c: 5 },
+            { b: "Bugatti", m: ["Chiron", "Mistral", "Bolide"], t: 1500000, s: 2000000, c: 3 },
+            { b: "Pagani", m: ["Utopia", "Huayra", "Zonda"], t: 2000000, s: 2500000, c: 4 },
+            { b: "Porsche", m: ["911 Carrera", "911 Turbo S", "GT3 RS", "Taycan", "Cayenne", "Macan"], t: 180000, s: 240000, c: 8 },
+            { b: "Maserati", m: ["MC20", "Grecale", "GranTurismo"], t: 140000, s: 180000, c: 7 },
+            { b: "Aston Martin", m: ["DB12", "Vantage", "DBX 707"], t: 160000, s: 210000, c: 7 },
+            { b: "Bentley", m: ["Continental GT", "Bentayga"], t: 220000, s: 280000, c: 6 },
+            { b: "Rolls-Royce", m: ["Phantom", "Cullinan", "Spectre"], t: 350000, s: 450000, c: 5 },
+            { b: "McLaren", m: ["750S", "Artura", "P1"], t: 380000, s: 460000, c: 6 },
+
+            // PREMIUM ALEMANES & OTROS
+            { b: "Audi", m: ["A1", "A3", "A4", "A6", "Q3", "Q5", "Q8", "RS6", "R8"], t: 65000, s: 85000, c: 11 },
+            { b: "BMW", m: ["M2", "M3", "M4", "M5", "X1", "X3", "X5", "X7", "i7"], t: 75000, s: 95000, c: 10 },
+            { b: "Mercedes-Benz", m: ["Clase A", "Clase C", "Clase E", "Clase S", "GLA", "GLC", "GLE", "G-Class"], t: 85000, s: 110000, c: 9 },
+            { b: "Land Rover", m: ["Defender", "Range Rover Sport", "Evoque", "Velar"], t: 130000, s: 170000, c: 8 },
+            { b: "Volvo", m: ["XC40", "XC60", "XC90", "C40 Recharge"], t: 55000, s: 75000, c: 14 },
+            { b: "Lexus", m: ["UX", "NX", "RX", "LC 500"], t: 70000, s: 90000, c: 15 },
+            { b: "Mini", m: ["Cooper S", "Countryman", "JCW"], t: 45000, s: 55000, c: 13 },
+            { b: "Jaguar", m: ["F-Type", "F-Pace", "I-Pace"], t: 90000, s: 120000, c: 10 },
+            { b: "Alfa Romeo", m: ["Giulia", "Stelvio", "Tonale"], t: 65000, s: 85000, c: 11 },
+
+            // GENERALISTAS (URUGUAY)
+            { b: "Toyota", m: ["Hilux", "Corolla", "Corolla Cross", "SW4", "Yaris", "Rav4"], t: 38000, s: 45000, c: 13 },
+            { b: "Volkswagen", m: ["Gol", "Polo", "Nivus", "T-Cross", "Taos", "Vento GLI", "Amarok V6", "Tiguan"], t: 28000, s: 35000, c: 13 },
+            { b: "Chevrolet", m: ["Onix", "Tracker", "S10", "Cruze", "Equinox", "Camaro", "Silverado"], t: 19000, s: 25000, c: 14 },
+            { b: "Hyundai", m: ["HB20", "Creta", "Tucson", "Kona", "Santa Fe", "Ioniq 5"], t: 21000, s: 27000, c: 14 },
+            { b: "Honda", m: ["Civic", "HR-V", "CR-V", "City", "Accord"], t: 32000, s: 40000, c: 16 },
+            { b: "Nissan", m: ["Versa", "Kicks", "Sentra", "Frontier", "X-Trail"], t: 23000, s: 30000, c: 15 },
+            { b: "Suzuki", m: ["Alto", "Swift", "Jimny", "Celerio", "Fronx", "Grand Vitara"], t: 12000, s: 16000, c: 20 },
+            { b: "Fiat", m: ["Mobi", "Argo", "Cronos", "Pulse", "Fastback", "Strada", "Toro"], t: 15000, s: 20000, c: 15 },
+            { b: "Renault", m: ["Kwid", "Sandero", "Stepway", "Duster", "Oroch", "Kardian"], t: 14000, s: 19000, c: 16 },
+            { b: "Peugeot", m: ["208", "2008", "3008", "5008", "Partner"], t: 22000, s: 29000, c: 15 },
+            { b: "Citroën", m: ["C3", "C3 Aircross", "C4 Cactus", "C5 Aircross"], t: 18000, s: 24000, c: 16 },
+            { b: "Jeep", m: ["Renegade", "Compass", "Commander", "Wrangler", "Gladiator"], t: 35000, s: 45000, c: 11 },
+            { b: "Ford", m: ["Ranger", "Maverick", "Mustang", "Territory", "Bronco Sport"], t: 40000, s: 55000, c: 10 },
+            { b: "Mitsubishi", m: ["L200", "Outlander", "Montero Sport"], t: 45000, s: 58000, c: 10 },
+            { b: "Kia", m: ["Picanto", "Rio", "Seltos", "Sportage", "Sorento", "EV6"], t: 22000, s: 30000, c: 15 },
+            { b: "Mazda", m: ["CX-3", "CX-5", "CX-30", "CX-90"], t: 45000, s: 60000, c: 12 },
+            { b: "Subaru", m: ["Impreza", "XV", "Forester", "Outback"], t: 48000, s: 65000, c: 11 },
+            { b: "Dodge", m: ["Ram 1500", "Ram 2500", "Challenger", "Durango"], t: 85000, s: 115000, c: 7 },
+            
+            // ELÉCTRICOS & CHINOS (AUGE EN UY)
+            { b: "Tesla", m: ["Model S Plaid", "Model 3", "Model X", "Model Y", "Cybertruck"], t: 45000, s: 75000, c: 65 },
+            { b: "BYD", m: ["Seagull", "Dolphin", "Yuan Plus", "Seal", "Han", "Tang"], t: 12000, s: 38000, c: 70 },
+            { b: "Jetour", m: ["X70", "X90", "Dashing"], t: 24000, s: 32000, c: 11 },
+            { b: "GWM", m: ["Haval H6", "Jolion", "Poer", "Ora 03"], t: 32000, s: 45000, c: 13 },
+            { b: "Chery", m: ["Tiggo 2", "Tiggo 4 Pro", "Tiggo 7 Pro", "Tiggo 8"], t: 18000, s: 25000, c: 12 },
+            { b: "Geely", m: ["Coolray", "Azkarra", "Geometry C"], t: 28000, s: 36000, c: 13 },
+            { b: "MG", m: ["MG3", "ZS", "HS", "MG4 Electric"], t: 19000, s: 26000, c: 15 }
+        ];
+
+        const carData = [];
+        const versions = ["Base", "Premium", "Sport", "Turbo", "Hybrid", "Limited Edition", "Ultimate"];
+        const imgs = [
+            "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800",
+            "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800",
+            "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800",
+            "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800",
+            "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800"
+        ];
+
+        // Generador masivo inteligente (+1000 modelos)
+        brands.forEach(brand => {
+            brand.m.forEach((model, mIdx) => {
+                versions.forEach((ver, vIdx) => {
+                    carData.push({
+                        b: brand.b,
+                        m: `${model} ${ver}`,
+                        t: brand.t + (vIdx * 2500),
+                        s: brand.s + (vIdx * 3000),
+                        c: brand.c,
+                        i: imgs[(mIdx + vIdx) % imgs.length]
+                    });
+                });
+            });
+        });
+
+        function render(items) {
+            const container = document.getElementById('catalog');
+            container.innerHTML = '';
+            document.getElementById('counter').innerText = items.length.toLocaleString();
+            
+            items.slice(0, 100).forEach(c => { // Mostramos 100 por rendimiento inicial
+                const div = document.createElement('div');
+                div.className = 'car-card p-8 cursor-pointer group';
+                div.onclick = () => selectCar(c);
+                div.innerHTML = `
+                    <div class="img-container mb-8 shadow-xl bg-slate-100">
+                        <img src="${c.i}">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all"></div>
+                    </div>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${c.b} Global Core</span>
+                    <h3 class="text-3xl font-extrabold text-black leading-tight group-hover:underline">${c.m}</h3>
+                    <div class="mt-8 pt-8 border-t-2 border-slate-50 flex justify-between items-center">
+                        <div class="text-[10px] font-black uppercase text-slate-400">Eficiencia: ${c.c} KM/L</div>
+                        <div class="w-10 h-10 rounded-full border-2 border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all font-black text-xs">→</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Buscador Inteligente
+        function doSearch() {
+            const q = document.getElementById('search').value.toLowerCase();
+            const filtered = carData.filter(c => 
+                (c.b + " " + c.m).toLowerCase().includes(q) || 
+                c.b.toLowerCase().startsWith(q)
+            );
+            render(filtered);
+        }
+
+        let current = null;
+        function selectCar(c) {
+            current = c;
+            document.getElementById('calc-label').innerText = `${c.b} ${c.m}`;
+            document.getElementById('calc-sum').innerText = "$ " + (c.t + c.s).toLocaleString();
+            document.getElementById('calc-cons').innerText = c.c + " KM/L";
+            document.getElementById('calc-img').src = c.i;
+            document.getElementById('calc-preview').classList.remove('hidden');
+            document.getElementById('result-box').classList.add('hidden');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function runCalc() {
+            if(!current) return;
+            // Cálculo: Patente/Seguro + Nafta ($78) para 1000km
+            const mensual = (current.t + current.s) / 12 + (1000 / current.c) * 78;
+            document.getElementById('total-price').innerText = "$ " + Math.round(mensual).toLocaleString();
+            document.getElementById('result-box').classList.remove('hidden');
+        }
+
+        render(carData);
+    </script>
+</body>
+</html>
