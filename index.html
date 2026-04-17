@@ -99,35 +99,22 @@
     <script>
         // Base de datos extendida con modelos populares en Uruguay y el mundo
         const cars = [
-            { brand: "BMW", model: "M3 Competition", tax: 85000, insurance: 95000, cons: 8 },
-            { brand: "BMW", model: "320i", tax: 55000, insurance: 60000, cons: 12 },
-            { brand: "Ford", model: "Mustang GT", tax: 70000, insurance: 75000, cons: 6 },
-            { brand: "Ford", model: "Ranger Raptor", tax: 45000, insurance: 55000, cons: 9 },
-            { brand: "Volkswagen", model: "Vento TSI", tax: 32000, insurance: 38000, cons: 11 },
-            { brand: "Volkswagen", model: "Gol Trend", tax: 15000, insurance: 18000, cons: 14 },
-            { brand: "Toyota", model: "Hilux SRX", tax: 48000, insurance: 52000, cons: 10 },
-            { brand: "Toyota", model: "Corolla Hybrid", tax: 28000, insurance: 30000, cons: 22 },
-            { brand: "Suzuki", model: "Swift Hybrid", tax: 19000, insurance: 22000, cons: 18 },
-            { brand: "Suzuki", model: "Jimny", tax: 22000, insurance: 25000, cons: 13 },
-            { brand: "Chevrolet", model: "Onix Turbo", tax: 18000, insurance: 21000, cons: 15 },
-            { brand: "Audi", model: "A4 Quattro", tax: 65000, insurance: 70000, cons: 10 },
-            { brand: "Hyundai", model: "HB20", tax: 16000, insurance: 19000, cons: 14 },
-            { brand: "Porsche", model: "911 Carrera", tax: 140000, insurance: 160000, cons: 7 },
-            { brand: "Mercedes-Benz", model: "C200", tax: 75000, insurance: 80000, cons: 11 },
-            { brand: "Tesla", model: "Model 3", tax: 30000, insurance: 45000, cons: 50 } // Consumo simbólico para EV
+            { brand: "BMW", model: "M3 Competition", tax: 85000, insurance: 95000, cons: 8, img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=500" },
+            { brand: "BMW", model: "320i", tax: 55000, insurance: 60000, cons: 12, img: "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=500" },
+            { brand: "Ford", model: "Mustang GT", tax: 70000, insurance: 75000, cons: 6, img: "https://images.unsplash.com/photo-1584345604480-8347bb9c503c?q=80&w=500" },
+            { brand: "Volkswagen", model: "Vento TSI", tax: 32000, insurance: 38000, cons: 11, img: "https://images.unsplash.com/photo-1622353320295-88849666014b?q=80&w=500" },
+            { brand: "Toyota", model: "Hilux SRX", tax: 48000, insurance: 52000, cons: 10, img: "https://images.unsplash.com/photo-1586860493604-3513367c3f0c?q=80&w=500" },
+            { brand: "Suzuki", model: "Swift Hybrid", tax: 19000, insurance: 22000, cons: 18, img: "https://images.unsplash.com/photo-1632243193741-b30893698d91?q=80&w=500" },
+            { brand: "Porsche", model: "911 Carrera", tax: 140000, insurance: 160000, cons: 7, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=500" },
+            { brand: "Chevrolet", model: "Onix Turbo", tax: 18000, insurance: 21000, cons: 15, img: "https://images.unsplash.com/photo-1637412781442-53b01a613354?q=80&w=500" }
         ];
-
-        function getCarImage(brand, model) {
-            // Usa Source Unsplash para buscar una imagen real basada en la marca y modelo
-            return `https://source.unsplash.com/400x300/?${brand},${model},car`;
-        }
 
         function loadCatalog(data) {
             const container = document.getElementById('catalog');
             container.innerHTML = data.map(car => `
                 <div class="car-card glass rounded-2xl p-3 cursor-pointer border border-transparent" 
-                     onclick="selectCar('${car.brand}', '${car.model}', ${car.tax}, ${car.insurance}, ${car.cons})">
-                    <img src="${getCarImage(car.brand, car.model)}" class="w-full h-32 object-cover rounded-xl mb-3 bg-slate-800" alt="${car.model}">
+                     onclick="selectCar('${car.brand}', '${car.model}', ${car.tax}, ${car.insurance}, ${car.cons}, '${car.img}')">
+                    <img src="${car.img}" class="w-full h-32 object-cover rounded-xl mb-3 bg-slate-800" alt="${car.model}">
                     <div class="px-1">
                         <p class="text-[10px] text-sky-400 font-bold uppercase tracking-tighter">${car.brand}</p>
                         <p class="text-sm font-bold text-white leading-tight">${car.model}</p>
@@ -147,34 +134,29 @@
 
         let selectedCons = 0;
 
-        function selectCar(brand, model, tax, ins, cons) {
+        function selectCar(brand, model, tax, ins, cons, img) {
             document.getElementById('calc-modelo').value = `${brand} ${model}`;
             document.getElementById('calc-patente').value = tax;
             document.getElementById('calc-seguro').value = ins;
             selectedCons = cons;
             
-            // Preview de imagen en la calculadora
             const prev = document.getElementById('selected-preview');
             const prevImg = document.getElementById('prev-img');
-            prevImg.src = getCarImage(brand, model);
+            prevImg.src = img;
             prev.classList.remove('hidden');
-            
             document.getElementById('report').classList.add('hidden');
         }
 
         function calculateTotal() {
             const tax = parseFloat(document.getElementById('calc-patente').value) || 0;
             const ins = parseFloat(document.getElementById('calc-seguro').value) || 0;
-            const km = parseFloat(document.getElementById('calc-km')?.value || 1000);
-            
+            const km = 1000;
             const fuel = (km / (selectedCons || 12)) * 78;
             const total = (tax + ins) / 12 + fuel;
-
             document.getElementById('total-result').innerText = `$ ${total.toLocaleString('es-UY', {maximumFractionDigits: 0})}`;
             document.getElementById('report').classList.remove('hidden');
         }
 
-        // Carga inicial
         loadCatalog(cars);
     </script>
 </body>
